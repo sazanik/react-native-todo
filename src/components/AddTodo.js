@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {View, StyleSheet, TextInput, Button, Alert} from "react-native";
+import {THEME} from "../theme";
 
 export const AddTodo = ({onSubmit}) => {
 
@@ -24,7 +25,11 @@ export const AddTodo = ({onSubmit}) => {
         autoCapitalize='none'
         // keyboardType='number-pad'
       />
-      <Button title='Add Task' onPress={pressHandler}/>
+      <Button
+        title='Add Task'
+        onPress={pressHandler}
+        color={THEME.MAIN_COLOR}
+      />
     </View>
   )
 }
@@ -41,6 +46,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderStyle: 'solid',
     borderBottomWidth: 2,
-    borderBottomColor: 'grey'
+    borderBottomColor: THEME.MAIN_COLOR
   }
 })
