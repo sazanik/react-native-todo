@@ -1,15 +1,14 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {Navbar} from "./src/components/Navbar";
 import {MainScreen} from "./src/screens/MainScreen";
 import {TodoScreen} from "./src/screens/TodoScreen";
 
 
 export default function App() {
-  const [todoId, setTodoId] = useState('2')
+  const [todoId, setTodoId] = useState(null)
   const [todos, setTodos] = useState([
-    {id: '1', title: 'Learn'},
-    {id: '2', title: 'Work'},
+    // {id: '1', title: 'Learn'},
   ])
 
 
@@ -22,15 +21,57 @@ export default function App() {
   }
 
   const removeTodo = id => {
-    setTodos(prev => prev.filter(todo => todo.id !== id))
+    const todo = todos.find(t => t.id === id)
+    Alert.alert(
+      'DELETE TASK',
+      `Delete "${todo.title}" task?`,
+      [
+        {
+          text: 'CANCEL',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel'
+        },
+        {
+          text: 'DELETE', onPress: () => {
+            setTodoId(null)
+            setTodos(prev => prev.filter(todo => todo.id !== id))
+          }
+        }
+      ],
+      {cancelable: false}
+    )
   }
 
+  const updateTodo = (id, title) => {
+    setTodos(prev => prev.map(todo => {
+        if (todo.id === id) todo.title = title
+        return todo
+      })
+    )
+  }
 
   const clearAll = () => {
-    setTodos([])
+    Alert.alert(
+      'DELETE TASKS',
+      `Delete all tasks?`,
+      [
+        {
+          text: 'CANCEL',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel'
+        },
+        {
+          text: 'DELETE ALL', onPress: () => {
+            setTodoId(null)
+            setTodos([])
+          }
+        }
+      ],
+      {cancelable: false}
+    );
   }
 
-  let content =
+  let content = (
     <MainScreen
       addTodo={addTodo}
       removeTodo={removeTodo}
@@ -38,10 +79,19 @@ export default function App() {
       clearAll={clearAll}
       todos={todos}
     />
+  )
+
 
   if (todoId) {
-    const selectedTodo = todos.find(todo => todo.id === todoId)
-    content = <TodoScreen goBack={() => setTodoId(null)} todo={selectedTodo}/>
+    const selectedTodo = todos.find(t => t.id === todoId)
+    content = (
+      <TodoScreen
+        onRemove={removeTodo}
+        goBack={() => setTodoId(null)}
+        todo={selectedTodo}
+        onSave={updateTodo}
+      />
+    )
   }
 
   return (
