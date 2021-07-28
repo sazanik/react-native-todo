@@ -1,9 +1,11 @@
 import React, {useState} from "react";
-import {StyleSheet, View, Button} from "react-native";
+import {StyleSheet, View, Button, Dimensions} from "react-native";
 import {THEME} from "../theme";
+import {FontAwesome, AntDesign} from "@expo/vector-icons";
 import {AppCard} from "../components/ui/AppCard";
 import {EditModal} from "../components/EditModal";
 import {AppTextBold} from "../components/ui/AppTextBold";
+import {AppButton} from "../components/ui/AppButton";
 
 export const TodoScreen = ({onRemove, goBack, todo, onSave}) => {
   const [modal, setModal] = useState(false)
@@ -11,7 +13,7 @@ export const TodoScreen = ({onRemove, goBack, todo, onSave}) => {
   const saveHandler = title => {
     onSave(todo.id, title)
     setModal(false)
-  } 
+  }
 
   return (
     <View>
@@ -24,24 +26,30 @@ export const TodoScreen = ({onRemove, goBack, todo, onSave}) => {
 
       <AppCard styles={styles.card}>
         <AppTextBold style={styles.title}>{todo.title}</AppTextBold>
-        <Button title='EDIT' onPress={() => setModal(true)} color={THEME.MAIN_COLOR}/>
+        <AppButton
+          onPress={() => setModal(true)}
+          color={THEME.MAIN_COLOR}>
+          <FontAwesome name='edit' size={20}/>
+        </AppButton>
       </AppCard>
 
       <View style={styles.buttons}>
         <View style={styles.button}>
-          <Button
-            title='BACK'
+          <AppButton
             color={THEME.GREY_COLOR}
             onPress={goBack}
-          />
+          >
+            <AntDesign name='back' size={20} color='white'/>
+          </AppButton>
         </View>
 
         <View style={styles.button}>
-          <Button
-            title='DELETE'
+          <AppButton
             color={THEME.DANGER_COLOR}
             onPress={() => onRemove(todo.id)}
-          />
+          >
+            <FontAwesome name='remove' size={20} color='white'/>
+          </AppButton>
         </View>
 
       </View>
@@ -55,7 +63,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   button: {
-    width: '40%'
+    width: Dimensions.get('window').width / 2.4,
+    // width: Dimensions.get('window').width > 400 ? 150 : 100
+
   },
 
   card: {

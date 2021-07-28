@@ -7,6 +7,8 @@ import AppLoading from "expo-app-loading";
 import {Navbar} from "./src/components/Navbar";
 import {MainScreen} from "./src/screens/MainScreen";
 import {TodoScreen} from "./src/screens/TodoScreen";
+import {StatusBar} from "expo-status-bar";
+import {THEME} from "./src/theme";
 
 async function loadApplication() {
   await Font.loadAsync({
@@ -115,6 +117,7 @@ export default function App() {
 
   return (
     <View>
+      <StatusBar style="auto"/>
       <Navbar title='TODO APP'/>
       <View style={styles.container}>
         {content}
@@ -125,7 +128,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 30,
+    paddingHorizontal: THEME.PADDING_HORIZONTAL,
     paddingVertical: 20,
   }
 })
