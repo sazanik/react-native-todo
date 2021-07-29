@@ -1,18 +1,24 @@
 import React, {useState} from "react";
-import {View, TextInput, StyleSheet, Button, Modal, Alert} from "react-native";
+import {View, TextInput, StyleSheet, Modal, Alert} from "react-native";
 import {THEME} from "../theme";
 import {AppButton} from "./ui/AppButton";
 
 export const EditModal = ({visible, onCancel, value, onSave}) => {
-  const [title, setTitle] = useState(value)
 
+
+  const [title, setTitle] = useState(value)
   const saveHandler = () => {
     if (title.trim().length === 0) {
       Alert.alert('Error!', 'This Field do not can empty!')
     } else {
-      console.log('111')
+      console.log(title)
       onSave(title)
     }
+  }
+
+  const cancelHandler = () => {
+    setTitle(value)
+    onCancel()
   }
 
   return (
@@ -33,7 +39,7 @@ export const EditModal = ({visible, onCancel, value, onSave}) => {
         />
         <View style={style.buttons}>
           <AppButton onPress={saveHandler} color={THEME.MAIN_COLOR}>SAVE</AppButton>
-          <AppButton onPress={onCancel} color={THEME.GREY_COLOR}>CANCEL</AppButton>
+          <AppButton onPress={cancelHandler} color={THEME.GREY_COLOR}>CANCEL</AppButton>
         </View>
       </View>
     </Modal>

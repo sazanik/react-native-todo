@@ -4,14 +4,16 @@ import {AddTodo} from "../components/AddTodo";
 import {Todo} from "../components/Todo";
 import {THEME} from "../theme";
 import {AppButton} from "../components/ui/AppButton";
+import {useTodos} from "../context/todo/todoContext";
+import {useScreen} from "../context/screen/screenContext";
 
-export const MainScreen = ({todos, addTodo, removeTodo, openTodo, clearAll}) => {
+export const MainScreen = () => {
+  const {todos, addTodo, removeTodo, removeAllTodos} = useTodos()
+  const {changeScreen} = useScreen()
 
   const [deviceWidth, setDeviceWidth] = useState(Dimensions.get('window').width - THEME.PADDING_HORIZONTAL * 2)
 
-
   useEffect(() => {
-
     const update = () => {
       setDeviceWidth(Dimensions.get('window').width - THEME.PADDING_HORIZONTAL * 2)
     }
@@ -20,7 +22,6 @@ export const MainScreen = ({todos, addTodo, removeTodo, openTodo, clearAll}) => 
     return () => {
       Dimensions.removeEventListener('change', update)
     }
-
   })
 
   return (
@@ -40,14 +41,14 @@ export const MainScreen = ({todos, addTodo, removeTodo, openTodo, clearAll}) => 
               </View>
             )
           }}
-          renderItem={({item}) => <Todo todo={item} onRemove={removeTodo} onOpen={openTodo}/>}
+          renderItem={({item}) => <Todo todo={item} onRemove={removeTodo} onOpen={changeScreen}/>}
         />
       </View>
 
       {!todos.length
         ? null
         :
-        <AppButton color={THEME.MAIN_COLOR} onPress={clearAll}>
+        <AppButton color={THEME.MAIN_COLOR} onPress={removeAllTodos}>
           CLEAR ALL
         </AppButton>
       }
