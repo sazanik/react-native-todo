@@ -14,6 +14,7 @@ import {
 import {useScreen} from "../screen/screenContext";
 import {Alert} from "react-native";
 
+
 export const TodoState = ({children}) => {
   const {changeScreen} = useScreen()
 
@@ -27,6 +28,7 @@ export const TodoState = ({children}) => {
   const fetchTodos = async () => {
     showLoader()
     hideError()
+
     try {
       const res = await fetch('https://react-native-todo-1-default-rtdb.europe-west1.firebasedatabase.app/todos.json', {
         method: 'GET',
@@ -79,12 +81,15 @@ export const TodoState = ({children}) => {
       [
         {
           text: 'CANCEL',
-          onPress: () => console.log('Cancel Pressed'),
           style: 'cancel'
         },
         {
-          text: 'DELETE', onPress: () => {
+          text: 'DELETE', onPress: async () => {
             changeScreen(null)
+            await fetch(`https://react-native-todo-1-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`, {
+              method: 'DELETE',
+              headers: {'Content-Type': 'application/json'},
+            })
             dispatch({type: REMOVE_TODO, id})
           }
         }
@@ -100,11 +105,16 @@ export const TodoState = ({children}) => {
       [
         {
           text: 'CANCEL',
-          onPress: () => console.log('Cancel Pressed'),
           style: 'cancel'
         },
         {
-          text: 'DELETE ALL', onPress: () => dispatch({type: REMOVE_ALL_TODOS})
+          text: 'DELETE ALL', onPress: async () => {
+            await fetch(`https://react-native-todo-1-default-rtdb.europe-west1.firebasedatabase.app/todos.json`, {
+              method: 'DELETE',
+              headers: {'Content-Type': 'application/json'},
+            })
+            dispatch({type: REMOVE_ALL_TODOS})
+          }
         }
       ],
       {cancelable: false}
