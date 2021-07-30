@@ -9,6 +9,7 @@ import {useScreen} from "../context/screen/screenContext";
 import {AppLoader} from "../components/ui/AppLoader";
 import {AppText} from "../components/ui/AppText";
 
+
 export const MainScreen = () => {
   const {todos, addTodo, removeTodo, removeAllTodos, fetchTodos, loading, error} = useTodos()
   const {changeScreen} = useScreen()
@@ -54,7 +55,7 @@ export const MainScreen = () => {
               <View style={styles.imageWrap}>
                 <Image
                   style={styles.image}
-                  source={require('../../assets/paper.png')}
+                  source={require('../../assets/note.png')}
                 />
               </View>
             )
@@ -76,13 +77,15 @@ export const MainScreen = () => {
 
 const styles = StyleSheet.create({
     imageWrap: {
-      height: 500,
-      padding: 10,
+      flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      height: 600,
+      padding: 10,
     },
 
     image: {
+
       width: '100%',
       height: '100%',
       resizeMode: 'contain',

@@ -11,7 +11,6 @@ export const EditModal = ({visible, onCancel, value, onSave}) => {
     if (title.trim().length === 0) {
       Alert.alert('Error!', 'This Field do not can empty!')
     } else {
-      console.log(title)
       onSave(title)
     }
   }

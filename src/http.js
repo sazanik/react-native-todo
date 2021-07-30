@@ -3,7 +3,7 @@ export class Http {
 
   static async get(url) {
     try {
-      await request(url, 'GET')
+      return await request(url, 'GET')
     } catch (e) {
       console.log(e)
       throw e
@@ -12,7 +12,7 @@ export class Http {
 
   static async post(url, data = {}) {
     try {
-      await request(url, 'POST', data)
+      return await request(url, 'POST', data)
     } catch (e) {
       console.log(e)
       throw e
@@ -21,7 +21,7 @@ export class Http {
 
   static async delete(url) {
     try {
-      await request(url, 'DELETE')
+      return await request(url, 'DELETE')
     } catch (e) {
       console.log(e)
       throw e
@@ -30,7 +30,7 @@ export class Http {
 
   static async patch(url, data = {}) {
     try {
-      await request(url, 'PATCH', data)
+      return await request(url, 'PATCH', data)
     } catch (e) {
       console.log(e)
       throw e

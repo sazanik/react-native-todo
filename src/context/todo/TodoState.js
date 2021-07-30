@@ -13,6 +13,7 @@ import {
 } from "../types";
 import {useScreen} from "../screen/screenContext";
 import {Alert} from "react-native";
+import {Http} from "../../http";
 
 
 export const TodoState = ({children}) => {
@@ -30,14 +31,8 @@ export const TodoState = ({children}) => {
     hideError()
 
     try {
-      const res = await fetch('https://react-native-todo-1-default-rtdb.europe-west1.firebasedatabase.app/todos.json', {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'},
-      })
-
-      const data = await res.json()
+      const data = await Http.get('https://react-native-todo-1-default-rtdb.europe-west1.firebasedatabase.app/todos.json')
       const todos = Object.keys(data || []).map(key => ({...data[key], id: key}))
-      console.log('todos', todos)
       dispatch({type: FETCH_TODOS, todos})
     } catch (e) {
       showError('Something went wrong...')
@@ -48,24 +43,21 @@ export const TodoState = ({children}) => {
   }
 
   const addTodo = async title => {
-    const res = await fetch('https://react-native-todo-1-default-rtdb.europe-west1.firebasedatabase.app/todos.json', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({title})
-    })
 
-    const data = await res.json()
-    console.log('data', data.name)
-    dispatch({type: ADD_TODO, title, id: data.name})
+    try {
+      const data = await Http.post('https://react-native-todo-1-default-rtdb.europe-west1.firebasedatabase.app/todos.json', {title})
+      dispatch({type: ADD_TODO, title, id: data.name})
+    } catch (e) {
+      console.log(e)
+      showError('Something went wrong...')
+    }
   }
+
+
   const editTodo = async (id, title) => {
     hideError()
     try {
-      await fetch(`https://react-native-todo-1-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`, {
-        method: 'PATCH',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({title})
-      })
+      await Http.patch(`https://react-native-todo-1-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`, {title})
       dispatch({type: EDIT_TODO, id, title})
     } catch (e) {
       showError('Something went wrong...')
@@ -86,11 +78,13 @@ export const TodoState = ({children}) => {
         {
           text: 'DELETE', onPress: async () => {
             changeScreen(null)
-            await fetch(`https://react-native-todo-1-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`, {
-              method: 'DELETE',
-              headers: {'Content-Type': 'application/json'},
-            })
-            dispatch({type: REMOVE_TODO, id})
+            try {
+              await Http.delete(`https://react-native-todo-1-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`)
+              dispatch({type: REMOVE_TODO, id})
+            } catch (e) {
+              showError('Something went wrong...')
+              console.log(e)
+            }
           }
         }
       ],
