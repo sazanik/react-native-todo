@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {Dimensions, FlatList, Image, StyleSheet, View} from "react-native";
 import {AddTodo} from "../components/AddTodo";
 import {Todo} from "../components/Todo";
@@ -6,12 +6,20 @@ import {THEME} from "../theme";
 import {AppButton} from "../components/ui/AppButton";
 import {useTodos} from "../context/todo/todoContext";
 import {useScreen} from "../context/screen/screenContext";
+import {AppLoader} from "../components/ui/AppLoader";
+import {AppText} from "../components/ui/AppText";
 
 export const MainScreen = () => {
-  const {todos, addTodo, removeTodo, removeAllTodos} = useTodos()
+  const {todos, addTodo, removeTodo, removeAllTodos, fetchTodos, loading, error} = useTodos()
   const {changeScreen} = useScreen()
 
   const [deviceWidth, setDeviceWidth] = useState(Dimensions.get('window').width - THEME.PADDING_HORIZONTAL * 2)
+
+  const loadTodos = useCallback(async () => await fetchTodos(), [fetchTodos])
+
+  useEffect(() => {
+    loadTodos()
+  }, [])
 
   useEffect(() => {
     const update = () => {
@@ -23,6 +31,16 @@ export const MainScreen = () => {
       Dimensions.removeEventListener('change', update)
     }
   })
+
+  if (loading) return <AppLoader/>
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <AppText style={styles.error}>{error}</AppText>
+        <AppButton style={styles.button} onPress={loadTodos}>REPEAT DOWNLOAD</AppButton>
+      </View>
+    )
+  }
 
   return (
     <View>
@@ -68,6 +86,21 @@ const styles = StyleSheet.create({
       width: '100%',
       height: '100%',
       resizeMode: 'contain',
-    }
+    },
+
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+
+    error: {
+      fontSize: 20,
+      color: THEME.DANGER_COLOR,
+      textTransform: 'uppercase',
+      marginBottom: 20
+    },
+
+
   }
 )

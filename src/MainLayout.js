@@ -11,7 +11,7 @@ export const MainLayout = () => {
   const {todoId} = useScreen()
 
   return (
-    <View>
+    <View style={styles.wrapper}>
       <StatusBar style="auto"/>
       <Navbar title='TODO APP'/>
       <View style={styles.container}>
@@ -23,7 +23,12 @@ export const MainLayout = () => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingHorizontal: THEME.PADDING_HORIZONTAL,
     paddingVertical: 20,
+  },
+
+  wrapper: {
+    flex: 1,
   }
 })

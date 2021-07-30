@@ -13,15 +13,13 @@ export const TodoScreen = () => {
   const {todos, editTodo, removeTodo} = useTodos()
   const {todoId, changeScreen} = useScreen()
 
-  console.log(todos, todoId)
-
   const todo = todos.find(t => t.id === todoId)
 
   const [modal, setModal] = useState(false)
   const [buttonWidth, setButtonWidth] = useState(Dimensions.get('window').width > 600 ? Dimensions.get('window').width / 2.22 : Dimensions.get('window').width / 2.5)
 
-  const saveHandler = title => {
-    editTodo(todoId, title)
+  const saveHandler = async title => {
+    await editTodo(todo.id, title)
     setModal(false)
   }
 
