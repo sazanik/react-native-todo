@@ -16,7 +16,7 @@ export const TodoScreen = () => {
   const todo = todos.find(t => t.id === todoId)
 
   const [modal, setModal] = useState(false)
-  const [buttonWidth, setButtonWidth] = useState(Dimensions.get('window').width > 600 ? Dimensions.get('window').width / 2.22 : Dimensions.get('window').width / 2.5)
+  const [buttonWidth, setButtonWidth] = useState(Dimensions.get('window').width > 600 ? Dimensions.get('window').width / 2.3 : Dimensions.get('window').width / 2.6)
 
   const saveHandler = async title => {
     await editTodo(todo.id, title)
@@ -25,7 +25,7 @@ export const TodoScreen = () => {
 
   useEffect(() => {
     const update = () => {
-      setButtonWidth(Dimensions.get('window').width > 600 ? Dimensions.get('window').width / 2.22 : Dimensions.get('window').width / 2.5)
+      setButtonWidth(Dimensions.get('window').width > 600 ? Dimensions.get('window').width / 2.3 : Dimensions.get('window').width / 2.6)
     }
     Dimensions.addEventListener('change', update)
 
