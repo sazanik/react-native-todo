@@ -1,79 +1,71 @@
-import React, {useCallback, useEffect, useState} from "react";
-import {Dimensions, FlatList, Image, StyleSheet, View} from "react-native";
-import {AddTodo} from "../components/AddTodo";
-import {Todo} from "../components/Todo";
-import {THEME} from "../theme";
-import {AppButton} from "../components/ui/AppButton";
-import {useTodos} from "../context/todo/todoContext";
-import {useScreen} from "../context/screen/screenContext";
-import {AppLoader} from "../components/ui/AppLoader";
-import {AppText} from "../components/ui/AppText";
+import React, { useCallback, useEffect, useState } from 'react';
+import { Dimensions, FlatList, Image, StyleSheet, View } from 'react-native';
+import { AddTodo } from '../components/AddTodo';
+import { Todo } from '../components/Todo';
+import { THEME } from '../theme';
+import { AppButton } from '../components/ui/AppButton';
+import { useTodos } from '../context/todo/todoContext';
+import { useScreen } from '../context/screen/screenContext';
+import { AppLoader } from '../components/ui/AppLoader';
+import { AppText } from '../components/ui/AppText';
 
 
 export const MainScreen = () => {
-  const {todos, addTodo, removeTodo, removeAllTodos, fetchTodos, loading, error} = useTodos()
-  const {changeScreen} = useScreen()
+  const { todos, addTodo, removeTodo, removeAllTodos, fetchTodos, loading, error } = useTodos();
+  const { changeScreen } = useScreen();
 
-  const [deviceWidth, setDeviceWidth] = useState(Dimensions.get('window').width - THEME.PADDING_HORIZONTAL * 2)
+  const [deviceWidth, setDeviceWidth] = useState(Dimensions.get('window').width - THEME.PADDING_HORIZONTAL * 2);
 
-  const loadTodos = useCallback(async () => await fetchTodos(), [fetchTodos])
-
-  useEffect(() => {
-    loadTodos()
-  }, [])
+  const loadTodos = useCallback(async () => fetchTodos(), [fetchTodos]);
 
   useEffect(() => {
-    const update = () => {
-      setDeviceWidth(Dimensions.get('window').width - THEME.PADDING_HORIZONTAL * 2)
-    }
-    Dimensions.addEventListener('change', update)
+    loadTodos();
+  }, []);
 
-    return () => {
-      Dimensions.removeEventListener('change', update)
-    }
-  })
+  useEffect(() => {
+    const update = () => setDeviceWidth(Dimensions.get('window').width - THEME.PADDING_HORIZONTAL * 2);
+    const subscription = Dimensions.addEventListener('change', update);
+    return () => subscription?.remove();
+  });
 
-  if (loading) return <AppLoader/>
+  if (loading) return <AppLoader />;
   if (error) {
     return (
       <View style={styles.container}>
         <AppText style={styles.error}>{error}</AppText>
         <AppButton style={styles.button} onPress={loadTodos}>REPEAT DOWNLOAD</AppButton>
       </View>
-    )
+    );
   }
 
   return (
     <View>
-      <AddTodo onSubmit={addTodo}/>
-      <View style={{width: deviceWidth}}>
+      <AddTodo onSubmit={addTodo} />
+      <View style={{ width: deviceWidth }}>
         <FlatList
           keyExtractor={item => item.id.toString()}
           data={todos}
-          ListEmptyComponent={() => {
-            return (
-              <View style={styles.imageWrap}>
-                <Image
-                  style={styles.image}
-                  source={require('../../assets/note.png')}
-                />
-              </View>
-            )
-          }}
-          renderItem={({item}) => <Todo todo={item} onRemove={removeTodo} onOpen={changeScreen}/>}
+          ListEmptyComponent={() => (
+            <View style={styles.imageWrap}>
+              <Image
+                style={styles.image}
+                source={require('../../assets/note.png')}
+              />
+            </View>
+          )}
+          renderItem={({ item }) => <Todo todo={item} onRemove={removeTodo} onOpen={changeScreen} />}
         />
       </View>
 
       {!todos.length
         ? null
-        :
-        <AppButton color={THEME.MAIN_COLOR} onPress={removeAllTodos}>
+        : <AppButton color={THEME.MAIN_COLOR} onPress={removeAllTodos}>
           CLEAR ALL
         </AppButton>
       }
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
     imageWrap: {
@@ -83,27 +75,21 @@ const styles = StyleSheet.create({
       height: 600,
       padding: 10,
     },
-
     image: {
-
       width: '100%',
       height: '100%',
       resizeMode: 'contain',
     },
-
     container: {
       flex: 1,
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
     },
-
     error: {
       fontSize: 20,
       color: THEME.DANGER_COLOR,
       textTransform: 'uppercase',
-      marginBottom: 20
+      marginBottom: 20,
     },
-
-
-  }
-)
+  },
+);

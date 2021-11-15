@@ -1,20 +1,21 @@
-import React, {useState} from "react";
-import {View, StyleSheet, TextInput, Alert, Keyboard} from "react-native";
-import {THEME} from "../theme";
-import {AntDesign} from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { View, StyleSheet, TextInput, Alert, Keyboard } from 'react-native';
+import { THEME } from '../theme';
+import { AntDesign } from '@expo/vector-icons';
 
-export const AddTodo = ({onSubmit}) => {
+export const AddTodo = ({ onSubmit }) => {
 
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState('');
 
   const pressHandler = () => {
-    if (!value.trim()) Alert.alert("The field don't can empty")
-    else {
-      onSubmit(value)
-      setValue('')
-      Keyboard.dismiss()
+    if (value.trim()) {
+      onSubmit(value);
+      setValue('');
+      Keyboard.dismiss();
+    } else {
+      Alert.alert('The field don\'t can empty');
     }
-  }
+  };
 
   return (
     <View style={styles.block}>
@@ -22,25 +23,24 @@ export const AddTodo = ({onSubmit}) => {
         style={styles.input}
         onChangeText={setValue}
         value={value}
-        placeholder='Enter Task Name'
+        placeholder="Enter task name"
         autoCorrect={false}
-        autoCapitalize='none'
-        // keyboardType='number-pad'
+        autoCapitalize="none"
       />
 
       <AntDesign.Button
         name="pluscircleo"
         size={24}
-        title='Add Task'
+        title="Add Task"
         onPress={pressHandler}
-        color='white'
-        style={{backgroundColor: THEME.GREEN_COLOR}}
+        color="white"
+        style={{ backgroundColor: THEME.GREEN_COLOR }}
       >
         ADD
       </AntDesign.Button>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   block: {
@@ -54,6 +54,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderStyle: 'solid',
     borderBottomWidth: 2,
-    borderBottomColor: THEME.MAIN_COLOR
-  }
-})
+    borderBottomColor: THEME.MAIN_COLOR,
+  },
+});

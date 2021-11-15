@@ -35,7 +35,6 @@ const handlers = {
   [HIDE_ERROR]: state => ({...state, error: null}),
   [FETCH_TODOS]: (state, {todos}) => ({...state, todos}),
 
-
   DEFAULT: state => state
 }
 

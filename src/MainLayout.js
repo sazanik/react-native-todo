@@ -1,25 +1,21 @@
-import React from "react";
-import {View, StyleSheet} from "react-native";
-import {StatusBar} from "expo-status-bar";
-import {Navbar} from "./components/Navbar";
-import {THEME} from "./theme";
-import {MainScreen} from "./screens/MainScreen";
-import {TodoScreen} from "./screens/TodoScreen";
-import {useScreen} from "./context/screen/screenContext";
+import React from 'react';
+import { View, StyleSheet, SafeAreaView, Platform } from 'react-native';
+import { THEME } from './theme';
+import { MainScreen } from './screens/MainScreen';
+import { TodoScreen } from './screens/TodoScreen';
+import { useScreen } from './context/screen/screenContext';
 
 export const MainLayout = () => {
-  const {todoId} = useScreen()
+  const { todoId } = useScreen();
 
   return (
-    <View style={styles.wrapper}>
-      <StatusBar style="auto"/>
-      <Navbar title='TODO APP'/>
+    <SafeAreaView style={styles.wrapper}>
       <View style={styles.container}>
-        {todoId ? <TodoScreen/> : <MainScreen/>}
+        {todoId ? <TodoScreen /> : <MainScreen />}
       </View>
-    </View>
-  )
-}
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -30,5 +26,6 @@ const styles = StyleSheet.create({
 
   wrapper: {
     flex: 1,
-  }
-})
+    paddingTop: Platform.OS === 'android' ? 30 : 10,
+  },
+});
